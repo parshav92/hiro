@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as baords from "../baords.js";
 import type * as board from "../board.js";
 
 /**
@@ -25,6 +26,7 @@ import type * as board from "../board.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  baords: typeof baords;
   board: typeof board;
 }>;
 export declare const api: FilterApi<
