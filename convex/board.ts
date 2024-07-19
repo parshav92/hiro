@@ -51,18 +51,18 @@ export const remove = mutation({
       throw new Error("Unauthorized");
     }
 
-    // const userId = identity.subject;
+    const userId = identity.subject;
 
-    // const existingFavourite = await ctx.db
-    //   .query("userFavourites")
-    //   .withIndex("by_user_board", (q) =>
-    //     q.eq("userId", userId).eq("boardId", args.id)
-    //   )
-    //   .unique();
-
-    // if (existingFavourite) {
-    //   await ctx.db.delete(existingFavourite._id);
-    // }
+    const existingFavorite = await ctx.db
+      .query("userFavorites")
+      .withIndex("by_user_board", (q) =>
+        q.eq("userId", userId).eq("boardId", args.id)
+      )
+      .unique();
+ 
+    if (existingFavorite) {
+      await ctx.db.delete(existingFavorite._id);
+    }
 
     await ctx.db.delete(args.id);
   },
@@ -115,14 +115,14 @@ export const favorite = mutation({
     }
     const userId = identity.subject;
 
-    const existingFavourite = await ctx.db
+    const existingFavorite = await ctx.db
       .query("userFavorites")
       .withIndex("by_user_board_org", (q) =>
         q.eq("userId", userId).eq("boardId", args.id).eq("orgId", args.orgId)
       )
       .unique();
 
-    if (existingFavourite) {
+    if (existingFavorite) {
       throw new Error("Already favorited");
     } 
     await ctx.db.insert("userFavorites", {
@@ -151,17 +151,17 @@ export const unfavorite = mutation({
     }
     const userId = identity.subject;
 
-    const existingFavourite = await ctx.db
+    const existingFavorite = await ctx.db
       .query("userFavorites")
       .withIndex("by_user_board", (q) =>
         q.eq("userId", userId).eq("boardId", args.id)
       )
       .unique();
 
-    if (!existingFavourite) {
+    if (!existingFavorite) {
       throw new Error("Favorited Board not found");
     } 
-    await ctx.db.delete(existingFavourite._id);
+    await ctx.db.delete(existingFavorite._id);
       return board;
   }
 });
