@@ -165,3 +165,13 @@ export const unfavorite = mutation({
       return board;
   }
 });
+
+export const get = query({
+  args: {
+    id: v.id("boards"),
+  },
+  handler: async (ctx, args) => {
+    return ctx.db.get(args.id);
+    
+  },
+});

@@ -7,26 +7,28 @@ import { useOrganization } from "@clerk/nextjs";
 import Image from "next/image";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { toast } from "sonner";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 // import { toast } from "sonner";
 
 export function EmptyBoards() {
-  const {organization} = useOrganization();
-  const {mutate, pending} = useApiMutation(api.board.create);
+  const router = useRouter();
+  const { organization } = useOrganization();
+  const { mutate, pending } = useApiMutation(api.board.create);
 
   const onClick = async () => {
-    if(!organization) return;
+    if (!organization) return;
     mutate({
       orgId: organization.id,
       title: "Untitled board",
     })
-    .then((id) => {
-      toast.success("Board created successfully");   
-  })
-  .catch((error) => {
-    toast.error("Failed to create board");
-  });
-  }
+      .then((id) => {
+        toast.success("Board created successfully");
+        router.push(`/board/${id}`);
+      })
+      .catch((error) => {
+        toast.error("Failed to create board");
+      });
+  };
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
