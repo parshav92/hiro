@@ -3,7 +3,6 @@
 import { Info } from "./info";
 import { Participants } from "./participants";
 import { Toolbar } from "./toolbar";
-
 interface CanvasProps {
   boardId: string;
 }
@@ -11,7 +10,7 @@ interface CanvasProps {
 export const Canvas = ({ boardId }: CanvasProps) => {
   return (
     <main className="h-full w-full relative relaative bg-neutral-100 touch-none">
-      <Info />
+      <Info boardId={boardId} />
       <Participants />
       <Toolbar />
     </main>

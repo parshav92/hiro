@@ -171,7 +171,8 @@ export const get = query({
     id: v.id("boards"),
   },
   handler: async (ctx, args) => {
-    return ctx.db.get(args.id);
+    const board = ctx.db.get(args.id);
+    return board
     
   },
 });
