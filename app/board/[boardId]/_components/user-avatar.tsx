@@ -17,9 +17,8 @@ export const UserAvatar = ({
   return (
     <Hint label={name!} side="bottom" sideOffset={18}>
       <Avatar className="h-8 w-8 border-2" style={{ borderColor }}>
-        <AvatarImage src={src}>
-          <AvatarFallback>{fallback}</AvatarFallback>
-        </AvatarImage>
+        <AvatarImage src={src} />
+        <AvatarFallback>{fallback}</AvatarFallback>
       </Avatar>
     </Hint>
   );

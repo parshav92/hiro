@@ -15,7 +15,12 @@ export const Room = ({
   fallback: NonNullable<ReactNode> | null;
 }) => {
   return (
-    <RoomProvider id={roomId}>
+    <RoomProvider
+      id={roomId}
+      initialPresence={{
+        cursor: null,
+      }}
+    >
       {children}
       <ClientSideSuspense fallback={fallback}>
         {() => children}
