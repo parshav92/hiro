@@ -1,6 +1,6 @@
 "use client";
 import { LayerType } from "@/types/canvas";
-import { useStorage } from "@liveblocks/react";
+import { useStorage } from "@/liveblocks.config";
 import { memo } from "react";
 import { Rectangle } from "./rectangle";
 

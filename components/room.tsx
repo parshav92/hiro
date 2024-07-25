@@ -11,7 +11,7 @@ export const Room = ({
   roomId,
   fallback,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   roomId: string;
   fallback: NonNullable<ReactNode>;
 }) => {
@@ -27,7 +27,6 @@ export const Room = ({
         layerIds: new LiveList([]),
       }}
     >
-      {children}
       <ClientSideSuspense fallback={fallback}>
         {() => children}
       </ClientSideSuspense>
