@@ -1,4 +1,3 @@
-"use client";
 import { LucideIcon } from "lucide-react";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
@@ -27,11 +26,7 @@ export const ToolButton = ({
         disabled={isDisabled}
         size="icon"
       >
-        <Icon
-          className={`text-neutral-500 ${
-            isActive ? "text-primary" : "text-neutral-500"
-          }`}
-        />
+        <Icon />
       </Button>
     </Hint>
   );
