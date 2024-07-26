@@ -4,6 +4,7 @@ import { useStorage } from "@/liveblocks.config";
 import { memo } from "react";
 import { Rectangle } from "./rectangle";
 import { Ellipse } from "./ellipse";
+import { Text } from "./text";
 
 interface LayerPreviewProps {
   id: string;
@@ -18,7 +19,17 @@ export const LayerPreview = memo(
     if (!layer) {
       return null;
     }
+
     switch (layer.type) {
+      case LayerType.Text:
+        return (
+          <Text
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
       case LayerType.Ellipse:
         return (
           <Ellipse
