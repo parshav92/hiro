@@ -8,7 +8,11 @@ import {
   useMutation,
   useStorage,
   useOthersMapped,
+  useSelf,
 } from "@/liveblocks.config";
+
+
+import { useDisableScrollBounce } from "@/hooks/use-disable-scroll-bounce";
 import { Info } from "./info";
 import { Participants } from "./participants";
 import { Toolbar } from "./toolbar";
@@ -22,7 +26,7 @@ import {
   Side,
   XYWH,
 } from "@/types/canvas";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CursorsPresence } from "./cursors-presence";
 import {
   colorToCss,
@@ -36,8 +40,8 @@ import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
 import { SelectionTools } from "./selection-tools";
-import { useSelf } from "@liveblocks/react";
 import { Path } from "./path";
+import { useDeleteLayers } from "@/hooks/use-delete-layers";
 interface CanvasProps {
   boardId: string;
 }
@@ -58,6 +62,8 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     b: 255,
   });
 
+
+  useDisableScrollBounce();
   const history = useHistory();
   const canUndo = useCanUndo();
   const canRedo = useCanRedo();
@@ -354,6 +360,29 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
     return layerIdsToColorSelection;
   }, [selections]);
+
+  const deleteLayers = useDeleteLayers();
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      switch (e.key) {
+        case "z":
+          if (e.ctrlKey || e.metaKey) {
+            if (e.shiftKey || e.altKey) history.redo();
+            else history.undo();
+
+            break;
+          }
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [deleteLayers, history]);
+
 
   return (
     <main className="h-full w-full relative bg-neutral-100 touch-none">
