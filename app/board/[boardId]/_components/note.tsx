@@ -3,9 +3,9 @@ import ContentEditable, {
   type ContentEditableEvent,
 } from "react-contenteditable";
 
-import { cn, colorToCss } from "@/lib/utils";
+import { cn, colorToCss, getContrastingTextColor } from "@/lib/utils";
 import { useMutation } from "@/liveblocks.config";
-import type { TextLayer } from "@/types/canvas";
+import type { NoteLayer } from "@/types/canvas";
 
 const font = Space_Grotesk({
   subsets: ["latin"],
@@ -14,26 +14,26 @@ const font = Space_Grotesk({
 
 const calculateFontSize = (width: number, height: number) => {
   const maxFontSize = 96;
-  const scaleFactor = 0.3;
+  const scaleFactor = 0.15;
   const fontSizeBasedOnHeight = height * scaleFactor;
   const fontSizeBasedOnWidth = width * scaleFactor;
 
   return Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth, maxFontSize);
 };
 
-interface TextProps  {
+interface NoteProps  {
   id: string;
-  layer: TextLayer;
+  layer: NoteLayer;
   onPointerDown: (e: React.PointerEvent, id: string) => void;
   selectionColor?: string;
 };
 
-export const Text = ({
+export const Note = ({
   id,
   layer,
   onPointerDown,
   selectionColor,
-}: TextProps) => {
+}: NoteProps) => {
   const { x, y, width, height, fill, value } = layer;
 
   const updateValue = useMutation(({ storage }, newValue: string) => {
@@ -55,7 +55,10 @@ export const Text = ({
       onPointerDown={(e) => onPointerDown(e, id)}
       style={{
         outline: selectionColor ? `1px solid ${selectionColor}` : "none",
+        backgroundColor: fill ? colorToCss(fill) : "black",
+        
       }}
+      className="shadow-md drop-shadow-xl"
     >
       <ContentEditable
         html={value || ""}
@@ -66,7 +69,7 @@ export const Text = ({
         )}
         style={{
           fontSize: calculateFontSize(width, height),
-          color: fill ? colorToCss(fill) : "#000",
+          color: fill ? getContrastingTextColor(fill) : "#000",
         }}
       />
     </foreignObject>
