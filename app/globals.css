@@ -105,3 +105,8 @@ body,
     @apply bg-background text-foreground;
   }
 }
+@keyframes scroll-rotate{
+  to {
+    transform: rotateX(0deg);
+  }
+}

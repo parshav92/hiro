@@ -18,7 +18,7 @@ export const ProductShowcase = () => {
   //   )
   // },[scrollYProgress])
   const rotateX = useTransform(scrollYProgress, [0, 1], [15, 0])
-  const opacity = useTransform(scrollYProgress, [0, 1], [.5, 1])
+  const opacity = useTransform(scrollYProgress, [0, 1], [.8, 1])
   return (
     <div className="bg-black text-white bg-gradient-to-b from-black to-[#5D2CAB] py-[72px] sm:py-24">
       <div className="container">
@@ -33,14 +33,15 @@ export const ProductShowcase = () => {
         <motion.div
           style={{
             opacity,
-            rotateX,
-            transformPerspective: "800px",
+            // rotateX,
+            // transformPerspective: "800px",
           }}
+          className='scroll-rotate [perspective:800px]'
         >
           <Image
             src={appScreen}
             alt="The product screenshot"
-            className="container mt-14"
+            className="container mt-14  [transform:rotateX(15deg)] [animation-timeline:view()] [animation-range:cover_contain_10%] animate-[scroll-rotate_linear_forwards]"
             ref={appImage}
           />
         </motion.div>
