@@ -6,6 +6,7 @@ html,
 body,
 :root {
   height: 100%;
+  overflow-x: hidden;
 }
 
 @layer base {
@@ -71,5 +72,41 @@ body,
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+/* For WebKit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 9px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #311458; /* Track color */
+  border-radius: 0px; /* Border radius for the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #5D2CAB; /* Thumb color */
+  border-radius: 10px; /* Border radius for the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Thumb color on hover */
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+@keyframes scroll-rotate{
+  to {
+    transform: rotateX(0deg);
   }
 }
