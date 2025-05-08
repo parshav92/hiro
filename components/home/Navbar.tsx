@@ -1,9 +1,25 @@
+"use client"
 import Image from 'next/image';
 import { ShimmerButton } from '../ui/shimmer-button';
 import MenuIcon from '../assets/icons/menu.svg';
 import { SignInButton } from '@clerk/nextjs';
+import { useState } from 'react';
 
 export const Navbar = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleGuestLogin = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/guest-login", { method: "POST" });
+      if (res.ok) {
+        window.location.href = "/"; // Redirect to app as guest
+      }
+    } catch (error) {
+      console.error("Guest login failed", error);
+    }
+    setLoading(false);
+  };
   return (
     <div className="bg-black">
       <div className="px-4">
@@ -52,16 +68,19 @@ export const Navbar = () => {
             >
               Customers
             </a> */}
-            <ShimmerButton className="shadow-xl">
+            {/* <ShimmerButton className="shadow-xl">
               <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
                 Try Guest Mode
               </span>
-            </ShimmerButton>
+            </ShimmerButton> */}
             <SignInButton mode="modal">
-            <button className="bg-white py-2 px-4 rounded-lg text-black">
-              Sign In
-            </button>
+              <button className="bg-white py-2 px-4 rounded-lg text-black">
+                Sign In
+              </button>
             </SignInButton>
+            {/* <button onClick={handleGuestLogin} disabled={loading}>
+              {loading ? "Starting Guest Session..." : "Continue as Guest"}
+            </button> */}
           </nav>
         </div>
       </div>
