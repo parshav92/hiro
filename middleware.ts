@@ -8,10 +8,22 @@ export default clerkMiddleware(async (auth, req) => {
   const { userId } = auth();
   const guestToken = cookies().get("guestToken")?.value;
   const guestExpiresAt = cookies().get("guestExpiresAt")?.value;
+  const guestId = cookies().get("guestId")?.value;
 
   // ✅ Allow guest access to protected routes for 10 minutes
-  if (!userId && guestToken && guestExpiresAt && Date.now() < Number(guestExpiresAt)) {
-    return NextResponse.next();
+  if (!userId && guestToken && guestExpiresAt && guestId && Date.now() < Number(guestExpiresAt)) {
+    // Add custom headers for Convex to identify guest user
+    const headers = new Headers(req.headers);
+    headers.set("x-guest-user-id", guestId);
+    headers.set("x-guest-token", guestToken);
+    
+    // Forward to Convex with guest headers
+    const response = NextResponse.next({
+      request: {
+        headers
+      }
+    });
+    return response;
   }
 
   // ✅ Redirect non-authenticated users (including guests after 10 mins)

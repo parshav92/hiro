@@ -4,22 +4,39 @@ import { ShimmerButton } from '../ui/shimmer-button';
 import MenuIcon from '../assets/icons/menu.svg';
 import { SignInButton } from '@clerk/nextjs';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export const Navbar = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleGuestLogin = async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/guest-login", { method: "POST" });
       if (res.ok) {
-        window.location.href = "/"; // Redirect to app as guest
+        const data = await res.json();
+        
+        // Ensure cookies are set on client-side as well
+        // This is a backup in case HttpOnly: false doesn't work
+        Cookies.set("guestToken", data.guestToken, { expires: 1/144 }); // 10 minutes
+        Cookies.set("guestExpiresAt", data.expiresAt.toString(), { expires: 1/144 });
+        Cookies.set("guestId", data.guestId, { expires: 1/144 });
+        Cookies.set("guestOrgId", data.guestOrgId, { expires: 1/144 });
+        
+        // Wait a moment to ensure cookies are set
+        setTimeout(() => {
+          // Reload the whole page to get a fresh state with the cookies
+          window.location.href = "/";
+        }, 100);
       }
     } catch (error) {
       console.error("Guest login failed", error);
+      setLoading(false);
     }
-    setLoading(false);
   };
+  
   return (
     <div className="bg-black">
       <div className="px-4">
@@ -68,19 +85,20 @@ export const Navbar = () => {
             >
               Customers
             </a> */}
-            {/* <ShimmerButton className="shadow-xl">
+            <ShimmerButton 
+              className="shadow-xl"
+              onClick={handleGuestLogin}
+              disabled={loading}
+            >
               <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
-                Try Guest Mode
+                {loading ? "Starting..." : "Try Guest Mode (10min)"}
               </span>
-            </ShimmerButton> */}
+            </ShimmerButton>
             <SignInButton mode="modal">
               <button className="bg-white py-2 px-4 rounded-lg text-black">
                 Sign In
               </button>
             </SignInButton>
-            {/* <button onClick={handleGuestLogin} disabled={loading}>
-              {loading ? "Starting Guest Session..." : "Continue as Guest"}
-            </button> */}
           </nav>
         </div>
       </div>

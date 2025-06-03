@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ModalProvider } from "@/providers/modal-provider";
 import { Suspense } from "react";
 import { Loading } from "@/components/auth/loading";
+import { GuestBanner } from "@/components/guest-banner";
 
 const dmsans = DM_Sans({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <Toaster />
           <ModalProvider />
+          <GuestBanner />
           {children}
         </ConvexClientProvider>
         </Suspense>

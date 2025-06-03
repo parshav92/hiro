@@ -2,12 +2,15 @@
 import { Plus } from "lucide-react";
 import { CreateOrganization } from "@clerk/nextjs";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogHeader, DialogDescription } from "@/components/ui/dialog";
 import { Hint } from "@/components/hint";
+import { useState } from "react";
 
 export const NewButton = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <div className="aspect-square">
           <Hint
@@ -22,8 +25,14 @@ export const NewButton = () => {
           </Hint>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-480px p-0 border-none bg-transparent ">
-        <CreateOrganization routing="hash" />
+      <DialogContent className="bg-white border rounded-lg overflow-hidden max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>Create Organization</DialogTitle>
+          <DialogDescription>Create a new organization to collaborate with others</DialogDescription>
+        </DialogHeader>
+        <div className="bg-white">
+          <CreateOrganization routing="hash" />
+        </div>
       </DialogContent>
     </Dialog>
   );

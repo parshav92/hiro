@@ -26,13 +26,31 @@ export const create = mutation({
       throw new Error("Unauthorized");
     }
 
+    // Check if this is a guest user (for guest sessions)
+    const isGuest = identity.tokenIdentifier.startsWith("guest:");
+    
+    if (isGuest) {
+      // Enforce limits for guest users
+      const existingBoards = await ctx.db
+        .query("boards")
+        .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
+        .collect();
+      
+      // Import this from your utils or define limit here
+      const GUEST_MAX_BOARDS = 5;
+      
+      if (existingBoards.length >= GUEST_MAX_BOARDS) {
+        throw new Error(`Guest users can create a maximum of ${GUEST_MAX_BOARDS} boards. Sign up to create more.`);
+      }
+    }
+    
     const randomImage = images[Math.floor(Math.random() * images.length)];
 
     const board = await ctx.db.insert("boards", {
       orgId: args.orgId,
       title: args.title,
       authorId: identity.subject,
-      authorName: identity.name!,
+      authorName: identity.name || "Guest User",
       imageUrl: randomImage,
     });
 
