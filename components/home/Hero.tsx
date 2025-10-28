@@ -1,10 +1,23 @@
 'use client';
 
 import Image from 'next/image';
-import ArrowIcon from '../assets/icons/arrow-w.svg';
 import cursorImage from '../assets/images/cursor.png';
 import messageImage from '../assets/images/message.png';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+// Dynamically import SignInButton to avoid hydration issues
+const DynamicSignInButton = dynamic(
+  () => import('@clerk/nextjs').then((mod) => mod.SignInButton),
+  { 
+    ssr: false,
+    loading: () => (
+      <button className="bg-white text-black py-3 px-5 rounded-lg font-medium">
+        Get started
+      </button>
+    )
+  }
+);
 
 export const Hero = () => {
   return (
@@ -61,9 +74,11 @@ export const Hero = () => {
         </div>
         <div>
           <div className="flex justify-center mt-8">
-            <button className="bg-white text-black py-3 px-5 rounded-lg font-medium">
-              Get started
-            </button>
+            <DynamicSignInButton mode="modal">
+              <button className="bg-white text-black py-3 px-5 rounded-lg font-medium">
+                Get started
+              </button>
+            </DynamicSignInButton>
           </div>
         </div>
       </div>

@@ -1,9 +1,21 @@
 "use client"
 import Image from 'next/image';
-import { ShimmerButton } from '../ui/shimmer-button';
-import MenuIcon from '../assets/icons/menu.svg';
 import { SignInButton } from '@clerk/nextjs';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import SignInButton to avoid hydration issues
+const DynamicSignInButton = dynamic(
+  () => import('@clerk/nextjs').then((mod) => mod.SignInButton),
+  { 
+    ssr: false,
+    loading: () => (
+      <button className="bg-white py-2 px-4 rounded-lg text-black">
+        Sign In
+      </button>
+    )
+  }
+);
 
 export const Navbar = () => {
   const [loading, setLoading] = useState(false);
@@ -34,10 +46,7 @@ export const Navbar = () => {
               className="relative"
             />
           </div>
-          <div className="border border-white border-opacity-30 h-10 w-10 inline-flex justify-center items-center rounded-lg sm:hidden">
-            <MenuIcon className="text-white" />
-          </div>
-          <nav className="text-white sm:flex gap-6 items-center hidden">
+          <nav className="text-white sm:flex gap-6 items-center">
             {/* <a
               href="#"
               className="text-opacity-60 text-white hover:opacity-100 transition"
@@ -68,16 +77,11 @@ export const Navbar = () => {
             >
               Customers
             </a> */}
-            {/* <ShimmerButton className="shadow-xl">
-              <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
-                Try Guest Mode
-              </span>
-            </ShimmerButton> */}
-            <SignInButton mode="modal">
+            <DynamicSignInButton mode="modal">
               <button className="bg-white py-2 px-4 rounded-lg text-black">
                 Sign In
               </button>
-            </SignInButton>
+            </DynamicSignInButton>
             {/* <button onClick={handleGuestLogin} disabled={loading}>
               {loading ? "Starting Guest Session..." : "Continue as Guest"}
             </button> */}
